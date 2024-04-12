@@ -10,9 +10,10 @@ import com.mshop.entity.CartDetail;
 
 @Repository
 public interface CartDetailRepository extends JpaRepository<CartDetail, Long>{
-	@Query(value = "select * from cart_details where cart_id = ?", nativeQuery = true)
+	@Query(value = "select * from cart_details where cart_id = ? order by updated_at desc", nativeQuery = true)
 	List<CartDetail> getByCartId(Long id);
 	
 	@Query(value = "select COUNT(cart_id) from cart_details where cart_id = ?", nativeQuery = true)
 	Long getCount(Long id);
+
 }
