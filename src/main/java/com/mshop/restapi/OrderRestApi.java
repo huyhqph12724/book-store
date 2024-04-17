@@ -3,6 +3,8 @@ package com.mshop.restapi;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import com.mshop.entity.Product;
+import com.mshop.repository.ProductResository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,6 +23,8 @@ import com.mshop.repository.OrderRepository;
 import com.mshop.repository.UserRepository;
 import com.mshop.service.SendMailService;
 
+import javax.transaction.Transactional;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("api/orders")
@@ -36,6 +40,9 @@ public class OrderRestApi {
 	
 	@Autowired
 	SendMailService sendmail;
+
+	@Autowired
+	ProductResository productResository;
 	
 	@GetMapping()
 	public ResponseEntity<List<Order>> getAll() {
@@ -109,12 +116,23 @@ public class OrderRestApi {
 	}
 	
 	@PutMapping("{id}")
+	@Transactional
 	public ResponseEntity<Order> put(@PathVariable("id") Long id, @RequestBody Order order) {
 		if(!repo.existsById(id)) {
 			return ResponseEntity.notFound().build();
 		}
 		if(!id.equals(order.getId())) {
 			return ResponseEntity.badRequest().build();
+		}
+		if(order.getStatus() == 0){
+			List<OrderDetail> orderDetails = Orepo.findOrderDetailByOrderId(id);
+			orderDetails.forEach(orderDetail -> {
+				Product product = orderDetail.getProduct();
+				if(product != null){
+					product.setQuantity(product.getQuantity() + orderDetail.getQuantity());
+					productResository.save(product);
+				}
+			});
 		}
 		Order o = repo.save(order);
 		return ResponseEntity.ok(o);
