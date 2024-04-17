@@ -2,6 +2,8 @@ package com.mshop.restapi;
 
 import java.util.List;
 
+import com.mshop.dto.RateDTO;
+import com.mshop.mapper.RateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,10 +24,13 @@ import com.mshop.repository.RateRepository;
 public class RateRestApi {
 	@Autowired
 	RateRepository repo;
-	
+	@Autowired
+	RateMapper rateMapper;
 	@GetMapping()
-	public ResponseEntity<List<Rate>> getAll()  {
-		return ResponseEntity.ok(repo.findAll());
+	public ResponseEntity<List<RateDTO>> getAll()  {
+
+		List<Rate> rates = repo.findAll();
+		return ResponseEntity.ok(rateMapper.toDTOS(rates));
 	}
 	
 	@GetMapping("{id}")

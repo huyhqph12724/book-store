@@ -113,7 +113,7 @@ public class OrderRestApi {
 		if(!repo.existsById(id)) {
 			return ResponseEntity.notFound().build();
 		}
-		if(id != order.getId()) {
+		if(!id.equals(order.getId())) {
 			return ResponseEntity.badRequest().build();
 		}
 		Order o = repo.save(order);

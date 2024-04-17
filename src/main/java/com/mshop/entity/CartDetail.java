@@ -1,6 +1,7 @@
 package com.mshop.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,6 +27,9 @@ public class CartDetail implements Serializable{
 	private Long id;
 	private int quantity;
 	private double price;
+
+	@JoinColumn(name = "date_time")
+	private Date dateTime;
 	
 	@ManyToOne
 	@JoinColumn(name = "product_id")
