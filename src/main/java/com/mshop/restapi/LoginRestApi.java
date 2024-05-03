@@ -16,7 +16,7 @@ import com.mshop.repository.UserRepository;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
-public class LoginRepository {
+public class LoginRestApi {
 	@Autowired
 	UserRepository repo;
 	
