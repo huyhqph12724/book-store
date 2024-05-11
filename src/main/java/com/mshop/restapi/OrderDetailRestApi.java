@@ -38,8 +38,11 @@ public class OrderDetailRestApi {
         if (!repo.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        if (id != orderDetail.getId()) {
+        if (!id.equals(orderDetail.getId())) {
             return ResponseEntity.badRequest().build();
+        }
+        if (orderDetail.getQuantity() == 0) {
+            repo.deleteById(id);
         }
         return ResponseEntity.ok(repo.save(orderDetail));
     }
