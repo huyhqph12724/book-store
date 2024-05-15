@@ -95,9 +95,14 @@ public class CartDetailRestApi {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        if (!repo.existsById(id)) {
+
+        CartDetail cartDetail = repo.findById(id).orElse(null);
+        if (cartDetail == null) {
             return ResponseEntity.notFound().build();
         }
+        Product product = cartDetail.getProduct();
+        product.setQuantity(product.getQuantity() + cartDetail.getQuantity());
+        Prepo.save(product);
         repo.deleteById(id);
         return ResponseEntity.ok().build();
     }
