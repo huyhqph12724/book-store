@@ -74,12 +74,13 @@ public class CartDetailRestApi {
             return ResponseEntity.notFound().build();
         }
         CartDetail cartDetail = repo.findById(detail.getId()).orElse(null);
+
         if (cartDetail == null) {
             return ResponseEntity.notFound().build();
         }
 
         int quantityChange = cartDetail.getQuantity() - detail.getQuantity();
-        Product product = Prepo.findById(detail.getProduct().getProductId()).orElse(null);
+        Product product = cartDetail.getProduct();
         if (product != null) {
             product.setQuantity(product.getQuantity() + quantityChange);
             Prepo.save(product);
