@@ -73,6 +73,18 @@ public class CartDetailRestApi {
         if (!Crepo.existsById(detail.getCart().getId())) {
             return ResponseEntity.notFound().build();
         }
+        CartDetail cartDetail = repo.findById(detail.getId()).orElse(null);
+        if (cartDetail == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        int quantityChange = cartDetail.getQuantity() - detail.getQuantity();
+        Product product = Prepo.findById(detail.getProduct().getProductId()).orElse(null);
+        if (product != null) {
+            product.setQuantity(product.getQuantity() + quantityChange);
+            Prepo.save(product);
+        }
+
         if (detail.getQuantity() == 0) {
             repo.deleteById(detail.getId());
             return ResponseEntity.ok(null);
