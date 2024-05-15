@@ -41,9 +41,6 @@ public class OrderDetailRestApi {
         if (!id.equals(orderDetail.getId())) {
             return ResponseEntity.badRequest().build();
         }
-        if (orderDetail.getQuantity() == 0) {
-            repo.deleteById(id);
-        }
         return ResponseEntity.ok(repo.save(orderDetail));
     }
 
